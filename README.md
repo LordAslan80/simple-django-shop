@@ -1,4 +1,4 @@
-****How to run:
+How to run:
   1. create a virtual environment:
   python -m venv .venv
   
