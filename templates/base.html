@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}{% endblock title %}</title>
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/bootstrap.rtl.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/meanmenu.css" %}">
+    <link rel="stylesheet" href="{% static "css/owl.theme.default.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/owl.carousel.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/icofont.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/font-awesome-pro.css" %}">
+    <link rel="stylesheet" href="{% static "css/scrollcue.css" %}">
+    <link rel="stylesheet" href="{% static "css/magnific-popup.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <link rel="stylesheet" href="{% static "css/responsive.css" %}">
+    <link rel="icon" type="image/png" href="{% static "images/favicon.png" %}">
+</head>
+<body>
+    {% include "includes/header.html" %}
+    {% include "includes/navbar.html" %}
+    
+    <div class="page-banner-area bg-black bg-img" data-background="{% static "images/banner-bg-shape.png" %}">
+        <div class="container mw-1680">
+            <div class="page-banner-content">
+                <h2>{% block page_title %}{% endblock page_title %}</h2>
+            </div>
+        </div>
+    </div>
+
+    {% block content %}{% endblock content %}
+    {% include "includes/footer.html" %}
+
+    <script src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static "js/jquery.meanmenu.js" %}"></script>
+    <script src="{% static "js/owl.carousel.min.js" %}"></script>
+    <script src="{% static "js/scrollcue.js" %}"></script>
+    <script src="{% static "js/magnific-popup.min.js" %}"></script>
+    <script src="{% static "js/counterup.min.js" %}"></script>
+    <script src="{% static "js/waypoints.min.js" %}"></script>
+    <script src="{% static "js/mixitup.min.js" %}"></script>
+    <script src="{% static "js/smoothscroll.min.js" %}"></script>
+    <script src="{% static "js/custom.js" %}"></script>
+</body>
+</html>

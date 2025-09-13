@@ -1,0 +1,101 @@
+{% extends "account/dashboard.html" %}
+
+{% block title %}جزئیات فاکتور{% endblock title %}
+
+{% block page_title %}جزئیات فاکتور{% endblock page_title %}
+
+{% block content %}
+<div class="invoice p-3 mb-3" style="margin-right:200px;margin-left:200px">
+    <div class="row">
+        <div class="col-12">
+            <h4>
+                {% load static %}
+                <img src="{% static "images/black-logo.svg" %}" style="margin-left:5px"> وبسایت من
+                <small class="float-left">تاریخ سفارش: <span dir="ltr">{{ order.get_persian_datetime.date }}</span></small><br>
+                <small class="float-left">ساعت سفارش: {{ order.get_persian_datetime.time }}</small>
+            </h4>
+        </div>
+    </div>
+    <div class="row invoice-info">
+        <div class="col-sm-4 invoice-col">
+            از
+            <address>
+            <strong>وبسایت من</strong><br>
+                آدرس<br>
+                استان اصفهان<br>
+                تلفن : <span dir="ltr">+۹۸ ۹۱۳۰ ۰۰۰ ۰۰۰</span><br>
+                ایمیل : info@mysite.ir
+            </address>
+        </div>
+        <div class="col-sm-4 invoice-col">
+            به
+            <address>
+                <strong>{{ request.user.profile.full_name }}</strong><br>
+                آدرس خریدار<br>
+                {{ request.user.profile.address }}<br>
+                تلفن : {{ request.user.profile.phone }}<br>
+                ایمیل : {{ request.user.email }}
+            </address>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ردیف</th>
+                        <th>محصول</th>
+                        <th>تعداد</th>
+                        <th>قیمت واحد</th>
+                        <th>قیمت کل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% load humanize %}
+                    {% for item in order.get_products_data %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.price|intcomma }} تومان</td>
+                            <td>{{ item.get_cost|intcomma }} تومان</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6"></div>
+        <div class="col-6">
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th style="width:50%">مبلغ کل :</th>
+                            <td>{{ order.get_products_total|intcomma }} تومان</td>
+                        </tr>
+                        <tr>
+                            <th>هزینه ارسال :</th>
+                            <td>{{ order.delivery_price|intcomma }} تومان ({{ order.delivery_company }})</td>
+                        </tr>
+                        <tr>
+                            <th>تخفیف :</th>
+                            <td>{{ order.get_discount_price|intcomma }} تومان (%{{ order.discount }})</td>
+                        </tr>
+                        <tr>
+                            <th>مبلغ پرداخت شده :</th>
+                            <td>{{ order.get_total_price|intcomma }} تومان</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row no-print">
+        <div class="col-12">
+            <a href="{% url "account:dashboard" request.user.id %}" class="btn btn-secondary float-left">بازگشت</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

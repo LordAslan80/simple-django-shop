@@ -1,0 +1,45 @@
+{% load static %}
+
+<div class="navbar-area bg-black">
+    <div class="main-nav">
+        <div class="container mw-1680">
+            <nav class="navbar navbar-expand-md navbar-light">
+                <a class="navbar-brand" href="#">
+                    <img src="{% static "images/white-logo.svg" %}" alt="logo">
+                </a>
+                <div class="collapse navbar-collapse for-mobile-menu" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a href="{% url "home:home" %}" class="nav-link active">خانه | محصولات</a></li>
+                        {% if request.user.is_authenticated %}
+                            <li class="nav-item">
+                                <a href="#" class="nav-link dropdown-toggle">ناحیه کاربری</a>
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item"><a href="{% url "account:dashboard" request.user.id %}" class="nav-link">داشبورد</a></li>
+                                    <li class="nav-item"><a href="{% url "account:sign_out" %}" class="nav-link">خروج</a></li>
+                                </ul>
+                            </li>
+                            {% else %}
+                            <li class="nav-item">
+                                <a href="#" class="nav-link dropdown-toggle">احراز هویت</a>
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item"><a href="{% url "account:sign_in" %}" class="nav-link">ورود</a></li>
+                                    <li class="nav-item"><a href="{% url "account:sign_up" %}" class="nav-link">ثبت نام</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item"><a href="{% url "order:cart" %}" class="nav-link">سبد خرید {{ cart_total_quantity }}</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="mobile-nav">
+        <div class="container">
+            <div class="mobile-menu">
+                <div class="logo">
+                    <a href="index.html"><img src="{% static "images/white-logo.svg" %}" alt="logo"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

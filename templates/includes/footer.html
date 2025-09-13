@@ -1,0 +1,55 @@
+{% load static %}
+
+<div class="footer-area pt-100 pb-75 bg-white">
+    <div class="container">
+        <div class="row" data-cues="slideInUp">
+            <div class="col-lg-3 col-sm-6">
+                <div class="footer-single-item">
+                    <a href="#" class="logo"><img src="{% static "images/logo.svg" %}" alt="logo"></a>
+                    <p>لورم ایپسوم متن ساختگی با تولید آسان نامفهوم از صنعت چاپ با استفاده از طراحان گرافیک است.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="footer-single-item ms-lg-5">
+                    <h3>لینک های مفید</h3>
+                    <ul class="useful-link">
+                        <li><a href="{% url "home:home" %}">خانه | محصولات</a></li>
+                        {% if request.user.is_authenticated %}
+                            <li class="nav-item"><a href="{% url "account:dashboard" request.user.id %}" class="nav-link">داشبورد</a></li>
+                        {% else %}
+                            <li class="nav-item"><a href="{% url "account:sign_in" %}" class="nav-link">ورود</a></li>
+                            <li class="nav-item"><a href="{% url "account:sign_up" %}" class="nav-link">ثبت نام</a></li>
+                        {% endif %}
+                        <li class="nav-item"><a href="{% url "order:cart" %}" class="nav-link">سبد خرید {{ cart_total_quantity }}</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="footer-single-item">
+                <h3>با ما تماس بگیرید</h3>
+                <p class="mb-3">اصفهان، خمینی شهر، دانشگاه آزاد اسلامی واحد خمینی شهر</p>
+                <ul class="contact-info ms-0">
+                    <li><a href="mailto:info@mysite.ir">info@mysite.ir</a></li>
+                    <li><a href="tel:+989130000000" dir="ltr">+98 9130 000 000</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="footer-single-item">
+            <h3>مشترک ما شوید</h3>
+            <p>برای به روز رسانی های بعدی در خبرنامه ما مشترک شوید. نگران نباشید ما آدرس ایمیل شما را اسپم نمی کنیم.</p>
+            <form class="position-relative z-1">
+                <input type="text" class="form-control" placeholder="ایمیل خود را وارد کنید">
+                <button type="submit" class="p-0 bg-transparent border-0 send-btn position-absolute top-50 end-0 translate-middle-y">
+                    <i class="fa-light fa-paper-plane-top"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="container">
+        <p class="copy-right">کپی رایت: تمامی حقوق <span>برای من</span> محفوظ است</p>
+    </div>
+    <div class="back-to-top text-center">
+        <i class="icofont-simple-up"></i>
+    </div>
+</div>

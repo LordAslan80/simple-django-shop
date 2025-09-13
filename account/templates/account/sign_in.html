@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}ورود{% endblock title %}
+
+{% block page_title %}ورود{% endblock page_title %}
+
+{% block content %}
+<div class="sign-in-area ptb-100 bg-white">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <div class="sign-in-img">
+          {% load static %}
+          <img src="{% static "images/sign-in-img.png" %}" alt="sign-in-img">
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="authentication-form">
+          <ul class="ps-0 list-unstyled d-flex authentication-nav">
+            <li><a href="{% url "account:sign_in" %}" class="active">ورود</a></li>
+            <li><a href="{% url "account:sign_up" %}">ثبت نام</a></li>
+          </ul>
+          <h3>وارد حساب کاربری خود شوید</h3>
+
+          <form action="" method="post" novalidate>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" class="form-group mb-4 main-btn" value="ورود">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

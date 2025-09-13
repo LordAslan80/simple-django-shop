@@ -1,0 +1,168 @@
+{% extends "account/dashboard.html" %}
+
+{% block title %}داشبورد{% endblock title %}
+
+{% block page_title %}داشبورد کاربر{% endblock page_title %}
+
+{% block content %}
+<section class="content" style="margin-right:200px;margin-left:200px">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        {% load humanize %}
+                        <h3>{{ user.profile.total_paid|intcomma }} <sup style="font-size: 20px">تومان</sup></h3>
+                        <p>مجموع ارزش کالاهای خریداری شده</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{ user.profile.total_discount|intcomma }} <sup style="font-size: 20px">تومان</sup></h3>
+                        <p>مجموع تخفیف ها</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{ user.profile.item_count }}</h3>
+                        <p>تعداد کالاهای خریداری شده</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ user.profile.order_count }}</h3>
+                        <p>تعداد سفارشات</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card card-primary card-outline">
+                            <div class="card-body box-profile">
+                                <div class="text-center">
+                                    <img class="profile-user-img img-fluid img-circle" src="{{ user.profile.image.url }}">
+                                </div>
+        
+                                <h3 class="profile-username text-center">{{ user.username }}</h3>
+        
+                                <p class="text-muted text-center">{{ user.email }}</p>
+        
+                                <ul class="list-group list-group-unbordered mb-3">
+                                    <li class="list-group-item">
+                                        <b><i class="fa fa-user mr-1"></i> نام و نام خانوادگی</b>
+                                        <p>{{ user.profile.full_name }}</p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b><i class="fa fa-phone mr-1"></i> شماره تماس</b>
+                                        <p>{{ user.profile.phone }}</p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b><i class="fa fa-map-marker mr-1"></i> آدرس</b>
+                                        <p>{{ user.profile.address }}</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header p-2">
+                                <ul class="nav nav-pills">
+                                    <li class="nav-item"><a class="nav-link active" href="#orders" data-toggle="tab">سفارشات</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">ویرایش اطلاعات</a></li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class="active tab-pane" id="orders">
+                                        <table id="example2" class="table table-bordered table-hover dataTable" role="grid">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">ردیف</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">تاریخ فاکتور</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">مبلغ فاکتور</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">تعداد کالاها</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">عملیات</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                {% if orders %}
+                                                    {% for order in orders %}
+                                                        <tr role="row" class="odd">
+                                                            <td class="sorting_1">{{ forloop.counter }}</td>
+                                                            <td>{{ order.get_persian_datetime.date }} ساعت {{ order.get_persian_datetime.time }}</td>
+                                                            <td>{{ order.get_total_price|intcomma }} تومان</td>
+                                                            <td>{{ order.get_products_count }}</td>
+                                                            <td><a href="{% url "order:order_detail" order.id %}" class="btn btn-block btn-secondary">جزئیات فاکتور</a></td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </table>
+                                    </div>
+                                    <div class="tab-pane" id="settings">
+                                        <div class="card-body">
+                                            <form action="" enctype="multipart/form-data" method="post">
+                                                {% csrf_token %}
+                                                <div class="row" style="display:flex;justify-content:space-evenly">
+                                                    <div class="form-group" style="width:19%">
+                                                        <label>نام کاربری</label>
+                                                        {{ form_user.username }}
+                                                    </div>
+                                                    <div class="form-group" style="width:29%">
+                                                        <label>پست الکترونیک</label>
+                                                        {{ form_user.email }}
+                                                    </div>
+                                                    <div class="form-group" style="width:19%">
+                                                        <label>شماره تماس</label>
+                                                        {{ form_profile.phone }}
+                                                    </div>
+                                                    <div class="form-group" style="width:29%">
+                                                        <label>نام و نام خانوادگی</label>
+                                                        {{ form_profile.full_name }}
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="display:flex;justify-content:space-evenly">
+                                                    <div class="form-group" style="width:29%">
+                                                        <label>تصویر کاربر</label>
+                                                        {{ form_profile.image }}
+                                                    </div>
+                                                    <div class="form-group" style="width:69%">
+                                                        <label>آدرس</label>
+                                                        {{ form_profile.address }}
+                                                    </div>
+                                                </div>
+                                                <input type="submit" class="btn btn-secondary float-left" value="ویرایش">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+{% endblock content %}

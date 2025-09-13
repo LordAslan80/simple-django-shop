@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}سبد خرید{% endblock title %}
+{% block page_title %}سبد خرید{% endblock page_title %}
+
+{% block content %}
+{% load humanize %}
+<div class="cart-area pt-100 pb-75 bg-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="d-flex justify-content-between cart-title">
+                    <h3>سبد خرید شما</h3>
+                    <h3>تعداد محصولات {{ cart|length }}</h3>
+                </div>
+                {% for item in cart %}
+                    {% if item.quantity > 0 %}
+                        <div class="d-sm-flex align-items-center cart-single-item">
+                            <div class="flex-shrink-0">
+                                <img src="{{ item.product.image.url }}" style="width:150px">
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center p-4">
+                                    <div>
+                                        <h3>{{ item.product.name }}</h3>
+                                        <div class="input-counter d-flex justify-content-between">
+                                            <span class="minus-btn"><a href="{% url "order:product_minus" item.product.id %}"><i class="fa-regular fa-minus"></i></a></span>
+                                            <input type="text" value="{{ item.quantity }}" readonly>
+                                            <span class="plus-btn"><a href="{% url "order:product_plus" item.product.id %}"><i class="fa-regular fa-plus"></i></a></span>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        <button class="close-btn"><a href="{% url "order:cart_remove" item.product.id %}"><i class="fa-regular fa-xmark fa-fw"></i></a></button>
+                                        <div style="display:flex">
+                                            {% if item.quantity > 1 %}
+                                                <label>قیمت واحد:</label>
+                                                <span class="d-block price" style="margin-left:20px">{{ item.price|intcomma }} تومان</span>
+                                                <label>قیمت کل:</label>
+                                            {% endif %}
+                                            <span class="d-block price">{{ item.get_cost|intcomma }} تومان</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-lg-4">
+                <div class="cart-subtotal">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h3>مجموع محصولات</h3>
+                        <h3>{{ order.get_products_total|intcomma }} تومان</h3>
+                    </div>
+                    <span class="shipping">نحوه ارسال</span>
+                    <div class="mb-4">
+                        {% for send in delivery %}
+                            <label class="radio-button-container">
+                                <a href="{% url "order:apply_delivery" send.id %}">{{ send.company_name }}: {{ send.price|intcomma }} تومان
+                                <input type="radio" {% if order.delivery_company == send.company_name %}checked{% endif %} name="radio">
+                                <span class="checkmark"></span></a>
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <p class="mb-4"><b>آدرس: </b>{{ user.profile.address }}</p>
+                    <div class="form-group mb-4">
+                        <form action="{% url "order:apply_coupon" %}" method="post">
+                            {% csrf_token %}
+                            <label>کد تخفیف : </label>
+                            {{ form.as_p }}
+                            <input type="submit" value="بررسی کد تخفیف" class="btn btn-secondary w-100 text-center">
+                        </form>
+                    </div>
+                    <p class="mb-4"><b>تخفیف: </b>{{ order.get_discount_price|intcomma }} تومان ({{ order.discount }}%)</p>
+                    <div class="d-flex justify-content-between mb-4">
+                        <h3>جمع کل</h3>
+                        <h3>{{ order.get_total_price|intcomma }} تومان</h3>
+                    </div>
+                    <a href="{% url "order:checkout" %}" class="main-btn w-100 text-center">پرداخت</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

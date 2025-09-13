@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }}{% endblock title %}
+
+{% block page_title %}جزئیات محصول{% endblock page_title %}
+
+{% block content %}
+<div class="product-details-area ptb-100 bg-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="product-details-img">
+                    <img src="{{ product.image.url }}">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="product-details-content mt-4 mt-lg-0">
+                    <h3>{{ product.name }}</h3>
+                    {% load humanize %}
+                    <span class="price">{{ product.price|intcomma }} تومان</span>
+                    <p>{{ product.description }}</p>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:30px">
+                        <div style="display:flex;align-items:center">
+                            <span class="sub-title">تعداد</span>
+                            <form action="{% url "order:cart_add" product.id %}" method="post" class="d-flex justify-content-xl-between align-items-center flex-wrap gap-2 quantity-wrap">
+                                {% csrf_token %}
+                                <div class="">
+                                    {{ form.as_p }}
+                                </div>
+                                <input type="submit" value="افزودن به سبد خرید"  class="main-btn active" style="border:none">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="product-info-area pb-100 bg-white">
+    <div class="container">
+        <h4>نظرات ({{ comments.count }})</h4><br>
+        <div class="tab-pane fade active show" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabindex="0">
+            <ul class="review-list ps-0 mb-0 list-unstyled">
+                {% for comment in comments %}
+                    <li>
+                        <div class="d-md-flex align-items-center">
+                            {% load static %}
+                            <div class="flex-shrink-0">
+                                <img src="{{ comment.user.profile.image.url }}">
+                            </div>
+                            <div class="flex-grow-1 ms-md-4 mt-3 mt-md-0">
+                                <h3>{{ comment.user }}</h3>
+                                <span class="col-lg-3">{{ comment.created }}</span>
+                                <p>{{ comment.body }}</p>
+                            </div>
+                        </div>
+                        {% if request.user.is_authenticated %}
+                            <button class="main-btn" id="make-reply">پاسخ</button>
+                            <div class="row"  id="reply-comment" style="display:none">
+                                <div class="col-lg-12">
+                                    <form class="form-group" action="{% url "home:add_reply" product.id comment.id %}" method="post">
+                                        {% csrf_token %}
+                                        {{ comment_reply_form }}
+                                        <input type="submit" class="main-btn" value="ارسال">
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% with replies=comment.rcomments.all %}
+                            {% for reply in replies %}
+                                <div class="d-md-flex align-items-center" style="margin:30px 50px 0 0;border:solid 1px black">
+                                    <div class="flex-shrink-0">
+                                        <img src="{{ reply.user.profile.image.url }}">
+                                    </div>
+                                    <div class="flex-grow-1 ms-md-4 mt-3 mt-md-0">
+                                        <h3>{{ reply.user }}</h3>
+                                        <span class="col-lg-3">{{ reply.created }}</span>
+                                        <p>{{ reply.body }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endwith %}
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="review-form">
+                {% if request.user.is_authenticated %}
+                    <h3>نظرات خود را با ما به اشتراک بگذارید</h3>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    {{ comment_form }}
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <input type="submit" class="main-btn" value="ارسال">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    {% else %}
+                    <h3>برای ارسال نظر ابتدا وارد حساب خود شوید</h3>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("make-reply").addEventListener("click", function(){
+        let element = document.getElementById("reply-comment")
+        window.getComputedStyle(element).display==='none' ? element.style.display='block' : element.style.display='none';
+    })
+</script>
+{% endblock content %}
